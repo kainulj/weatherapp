@@ -37,6 +37,45 @@ const HourlyForecast = ({ forecast, tab, index }) => {
   )
 }
 
+const DailyForecast = ({ forecast, tab, index }) => {
+  const addDays = (date, days) => {
+    const newDate = new Date()
+    newDate.setDate(date.getDate() + days)
+    return newDate
+  }
+  const date = new Date()
+  const dateFormat = { month:'numeric', day:'numeric' }
+  return (
+    <TableContainer hidden={tab !== index}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell>Temperature</TableCell>
+            <TableCell>Feels like</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {forecast.map((row, i) => (
+            <TableRow key={i}>
+              <TableCell>{new Intl.DateTimeFormat('fi-FI', dateFormat).format(addDays(date, i+1))}</TableCell>
+              <TableCell>
+                <img
+                  src={`http://openweathermap.org/img/wn/${row.weather[0].icon}@2x.png`}
+                  alt={row.weather[0].description}
+                />
+              </TableCell>
+              <TableCell>{row.temp.day} ℃</TableCell>
+              <TableCell>{row.feels_like.day} ℃</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}
+
 const Weather = ({ weather, forecast }) => {
   const [tab, setTab] = useState(0)
 
@@ -64,6 +103,7 @@ const Weather = ({ weather, forecast }) => {
           <Tab label='Daily'/>
         </Tabs>
         <HourlyForecast forecast={forecast.hourly} tab={tab} index={0}/>
+        <DailyForecast forecast={forecast.daily} tab={tab} index={1}/>
       </AppBar>
     </div>
   )
