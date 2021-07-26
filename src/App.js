@@ -3,6 +3,27 @@ import './App.css'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { AppBar, Tabs, Tab, Table, TableRow, TableCell, TableBody, TableContainer, TableHead } from '@material-ui/core'
+import { North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest } from '@material-ui/icons'
+
+const windDirection = (direction) => {
+  if(direction <= 22.5 || direction > 337.5){
+    return <North />
+  } else if(direction <= 67.5){
+    return <NorthEast />
+  } else if(direction <= 112.5){
+    return <East />
+  } else if(direction <= 157.5){
+    return <SouthEast />
+  } else if(direction <= 202.5){
+    return <South />
+  } else if(direction <= 247.5){
+    return <SouthWest />
+  } else if(direction <= 292.5){
+    return <West />
+  } else {
+    return <NorthWest />
+  }
+}
 
 const HourlyForecast = ({ forecast, tab, index }) => {
   const hour = new Date().getHours() + 1
@@ -27,8 +48,8 @@ const HourlyForecast = ({ forecast, tab, index }) => {
                   alt={row.weather[0].description}
                 />
               </TableCell>
-              <TableCell>{row.temp} ℃</TableCell>
-              <TableCell>{row.feels_like} ℃</TableCell>
+              <TableCell>{Math.round(row.temp)} ℃</TableCell>
+              <TableCell>{windDirection(row.wind_deg)} {row.wind_speed.toFixed(1)} m/s</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -53,7 +74,7 @@ const DailyForecast = ({ forecast, tab, index }) => {
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell>Temperature</TableCell>
-            <TableCell>Feels like</TableCell>
+            <TableCell>Wind</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -66,8 +87,28 @@ const DailyForecast = ({ forecast, tab, index }) => {
                   alt={row.weather[0].description}
                 />
               </TableCell>
-              <TableCell>{row.temp.day} ℃</TableCell>
-              <TableCell>{row.feels_like.day} ℃</TableCell>
+              <TableCell>{Math.round(row.temp.day)} ℃</TableCell>
+              <TableCell>{windDirection(row.wind_deg)} {row.wind_speed.toFixed(1)} m/s</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}
+
+const Alerts = ({ weather, alerts, tab, index }) =>{
+  if(!alerts){
+    return null
+  }
+  const currentAlerts = alerts.filter(a => a.start < weather.dt)
+  return (
+    <TableContainer hidden={tab !== index}>
+      <Table>
+        <TableBody>
+          {currentAlerts.map((a, i) => (
+            <TableRow key={i}>
+              <TableCell>{a.description}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -86,7 +127,7 @@ const Weather = ({ weather, forecast }) => {
   const handleTabChange = (event, newValue) => {
     setTab(newValue)
   }
-
+  console.log(forecast)
   return (
     <div>
       <h1>{weather.name}</h1>
@@ -95,15 +136,18 @@ const Weather = ({ weather, forecast }) => {
         alt={weather.weather[0].description}
       />
       <h2>{weather.weather[0].description}</h2>
-      <h2>Temperature: {weather.main.temp}℃</h2>
-      <h2>Feels like: {weather.main.feels_like}℃</h2>
+      <h2>Temperature: {Math.round(weather.main.temp)}℃</h2>
+      <h2>Feels like: {Math.round(weather.main.feels_like)}℃</h2>
+      <h2>Wind: {windDirection(weather.wind.deg)} {weather.wind.speed.toFixed(1)} m/s</h2>
       <AppBar position="static">
         <Tabs value={tab} onChange={handleTabChange}>
-          <Tab label='hourly'/>
+          <Tab label='Hourly'/>
           <Tab label='Daily'/>
+          <Tab label='Alerts'/>
         </Tabs>
         <HourlyForecast forecast={forecast.hourly} tab={tab} index={0}/>
         <DailyForecast forecast={forecast.daily} tab={tab} index={1}/>
+        <Alerts weather={weather} alerts={forecast.alerts} tab={tab} index={2}></Alerts>
       </AppBar>
     </div>
   )
@@ -111,22 +155,24 @@ const Weather = ({ weather, forecast }) => {
 
 function App() {
   const [city, setCity] = useState('Helsinki')
+  const [newCity, setNewCity] = useState('')
   const [currentWeather, setCurrentWeather] = useState(null)
   const [forecast, setForecast] = useState(null)
 
-  const getWeather = async () => {
+  const getWeather = async (cityName) => {
     try {
       const weather = await axios.get(
-        `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+        `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
       )
       setCurrentWeather(weather.data)
+      setCity(cityName)
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    getWeather()
+    getWeather(city)
   }, [])
 
   useEffect(() => {
@@ -142,17 +188,21 @@ function App() {
 
   const handleSubmit =  (event) => {
     event.preventDefault()
-    getWeather()
+    getWeather(newCity)
+    setNewCity('')
   }
 
   const handleCityChange = (event) => {
-    setCity(event.target.value)
+    setNewCity(event.target.value)
   }
 
   return (
     <div className="App">
       <form onSubmit={handleSubmit}>
-        <input name="city" onChange={handleCityChange}></input>
+        <input
+          value={newCity}
+          onChange={handleCityChange}
+        ></input>
         <button type="submit">Search</button>
       </form>
       <Weather weather={currentWeather} forecast={forecast}/>
