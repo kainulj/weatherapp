@@ -37,6 +37,13 @@
   }
 }
 
+h2 {
+  padding: 10px;
+  display: inline-block;
+}
+
 h2:first-letter {
   text-transform: capitalize;
 }
+
+
