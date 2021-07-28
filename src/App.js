@@ -7,21 +7,21 @@ import { North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest } 
 
 const windDirection = (direction) => {
   if(direction <= 22.5 || direction > 337.5){
-    return <North />
-  } else if(direction <= 67.5){
-    return <NorthEast />
-  } else if(direction <= 112.5){
-    return <East />
-  } else if(direction <= 157.5){
-    return <SouthEast />
-  } else if(direction <= 202.5){
     return <South />
-  } else if(direction <= 247.5){
+  } else if(direction <= 67.5){
     return <SouthWest />
-  } else if(direction <= 292.5){
+  } else if(direction <= 112.5){
     return <West />
-  } else {
+  } else if(direction <= 157.5){
     return <NorthWest />
+  } else if(direction <= 202.5){
+    return <North />
+  } else if(direction <= 247.5){
+    return <NorthEast />
+  } else if(direction <= 292.5){
+    return <East />
+  } else {
+    return <SouthEast />
   }
 }
 
@@ -35,7 +35,9 @@ const HourlyForecast = ({ forecast, tab, index }) => {
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell>Temperature</TableCell>
-            <TableCell>Feels like</TableCell>
+            <TableCell>Wind</TableCell>
+            <TableCell>Rain</TableCell>
+            <TableCell>UV Index</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -50,6 +52,8 @@ const HourlyForecast = ({ forecast, tab, index }) => {
               </TableCell>
               <TableCell>{Math.round(row.temp)} ℃</TableCell>
               <TableCell>{windDirection(row.wind_deg)} {row.wind_speed.toFixed(1)} m/s</TableCell>
+              <TableCell>{row.rain ? row.rain['1h'] : 0 } mm</TableCell>
+              <TableCell>{row.uvi.toFixed(1)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -75,6 +79,8 @@ const DailyForecast = ({ forecast, tab, index }) => {
             <TableCell></TableCell>
             <TableCell>Temperature</TableCell>
             <TableCell>Wind</TableCell>
+            <TableCell>Rain</TableCell>
+            <TableCell>UV Index</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -89,6 +95,8 @@ const DailyForecast = ({ forecast, tab, index }) => {
               </TableCell>
               <TableCell>{Math.round(row.temp.day)} ℃</TableCell>
               <TableCell>{windDirection(row.wind_deg)} {row.wind_speed.toFixed(1)} m/s</TableCell>
+              <TableCell>{row.rain ? row.rain : 0 } mm</TableCell>
+              <TableCell>{row.uvi.toFixed(1)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -124,13 +132,15 @@ const Weather = ({ weather, forecast }) => {
     return null
   }
 
+  console.log(weather)
+
   const handleTabChange = (event, newValue) => {
     setTab(newValue)
   }
   console.log(forecast)
   return (
     <div>
-      <h1>{weather.name}</h1>
+      <h1>{weather.name}, {weather.sys.country}</h1>
       <img
         src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
         alt={weather.weather[0].description}
@@ -139,6 +149,8 @@ const Weather = ({ weather, forecast }) => {
       <h2>Temperature: {Math.round(weather.main.temp)}℃</h2>
       <h2>Feels like: {Math.round(weather.main.feels_like)}℃</h2>
       <h2>Wind: {windDirection(weather.wind.deg)} {weather.wind.speed.toFixed(1)} m/s</h2>
+      <h2>Rain: {forecast.hourly[0].rain ? forecast.hourly[0].rain['1h'] : 0} mm</h2>
+      <h2>UV Index: {forecast.hourly[0].uvi}</h2>
       <AppBar position="static">
         <Tabs value={tab} onChange={handleTabChange}>
           <Tab label='Hourly'/>
