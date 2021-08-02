@@ -16,7 +16,7 @@ function App() {
   const getWeather = async (cityName) => {
     try {
       const weather = await axios.get(
-        `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
       )
       setCurrentWeather(weather.data)
       setCity(cityName)
@@ -37,7 +37,7 @@ function App() {
       const coords = currentWeather.coord
       axios
         .get(
-          `http://api.openweathermap.org/data/2.5/onecall?lat=${coords.lat}&lon=${coords.lon}&exclude=current,minutely&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${coords.lat}&lon=${coords.lon}&exclude=current,minutely&units=metric&appid=${process.env.REACT_APP_API_KEY}`
         )
         .then(response => setForecast(response.data))
     }

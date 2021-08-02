@@ -35,7 +35,7 @@ const DailyForecast = ({ forecast, tab, index }) => {
               <TableCell>{new Intl.DateTimeFormat('fi-FI', dateFormat).format(addDays(date, i+1))}</TableCell>
               <TableCell>
                 <img
-                  src={`http://openweathermap.org/img/wn/${row.weather[0].icon}@2x.png`}
+                  src={`https://openweathermap.org/img/wn/${row.weather[0].icon}@2x.png`}
                   alt={row.weather[0].description}
                 />
               </TableCell>

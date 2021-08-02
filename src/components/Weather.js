@@ -23,7 +23,7 @@ const Weather = ({ weather, forecast }) => {
       <h1>{weather.name}, {weather.sys.country}</h1>
       <div>
         <img
-          src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
           alt={weather.weather[0].description}
         />
         <h2 style={{ display: 'block' }}>{weather.weather[0].description}</h2>
