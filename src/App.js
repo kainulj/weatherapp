@@ -2,6 +2,7 @@ import './App.css'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Alert from '@material-ui/lab/Alert'
+import { Box } from '@material-ui/core'
 
 import Weather from './components/Weather'
 
@@ -53,7 +54,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <Box className="App" style={{ background: '#2196f3', minHeight: '100vh' }}>
       { errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <form onSubmit={handleSubmit}>
         <input
@@ -63,7 +64,7 @@ function App() {
         <button type="submit">Search</button>
       </form>
       <Weather weather={currentWeather} forecast={forecast}/>
-    </div>
+    </Box>
   )
 }
 

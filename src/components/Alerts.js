@@ -6,9 +6,11 @@ const Alerts = ({ weather, alerts, tab, index }) =>{
   if(!alerts){
     return null
   }
+
   const currentAlerts = alerts.filter(a => a.start < weather.dt)
+
   return (
-    <TableContainer hidden={tab !== index}>
+    <TableContainer hidden={tab !== index} >
       <Table>
         <TableBody>
           {currentAlerts.map((a, i) => (

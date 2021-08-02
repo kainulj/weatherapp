@@ -14,7 +14,11 @@ const DailyForecast = ({ forecast, tab, index }) => {
   const dateFormat = { month:'numeric', day:'numeric' }
   return (
     <TableContainer hidden={tab !== index}>
-      <Table>
+      <Table options={{
+        rowStyle: {
+          fontSize: 24,
+        }
+      }}>
         <TableHead>
           <TableRow>
             <TableCell></TableCell>

@@ -35,7 +35,7 @@ const Weather = ({ weather, forecast }) => {
       <h2>Wind: {windDirection(weather.wind.deg)} {weather.wind.speed.toFixed(1)} m/s</h2>
       <h2>Rain: {forecast.hourly[0].rain ? forecast.hourly[0].rain['1h'] : 0} mm</h2>
       <h2>UV Index: {forecast.hourly[0].uvi}</h2>
-      <AppBar position="static" bgcolor="primary.main">
+      <AppBar position="static" style={{ background: '#2196f3' }}>
         <Tabs value={tab} onChange={handleTabChange}>
           <Tab label='Hourly'/>
           <Tab label='Daily'/>
