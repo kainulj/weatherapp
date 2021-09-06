@@ -2,6 +2,7 @@ import React from 'react'
 import  PropTypes  from 'prop-types'
 import { TableContainer, Table, TableRow, TableCell, TableBody } from '@material-ui/core'
 
+// Displays todays weather alerts
 const Alerts = ({ weather, alerts, tab, index }) =>{
   if(!alerts){
     return null

@@ -4,8 +4,10 @@ import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from
 
 import windDirection from '../utils/WindDirection'
 
+// Daily forecast for the next 24 hours
 const HourlyForecast = ({ forecast, tab, index }) => {
   const hour = new Date().getHours() + 1
+
   return (
     <TableContainer hidden={tab !== index}>
       <Table>

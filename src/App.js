@@ -13,6 +13,7 @@ function App() {
   const [forecast, setForecast] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  // Gets the current weather from OpenWeater's Current Weather API. If the request fails error message is shown.
   const getWeather = async (cityName) => {
     try {
       const weather = await axios.get(
@@ -32,8 +33,10 @@ function App() {
     getWeather(city)
   }, [])
 
+  // Gets the weather forecast and alerts from OpenWeater's One Call API.
   useEffect(() => {
     if(currentWeather){
+      // We get coordinates of the location from the previous request.
       const coords = currentWeather.coord
       axios
         .get(

@@ -4,14 +4,18 @@ import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody } from
 
 import windDirection from '../utils/WindDirection'
 
+// Daily forecast for the next seven days
 const DailyForecast = ({ forecast, tab, index }) => {
+  // Adds given amount of days to the date
   const addDays = (date, days) => {
     const newDate = new Date()
     newDate.setDate(date.getDate() + days)
     return newDate
   }
+
   const date = new Date()
   const dateFormat = { month:'numeric', day:'numeric' }
+
   return (
     <TableContainer hidden={tab !== index}>
       <Table options={{
